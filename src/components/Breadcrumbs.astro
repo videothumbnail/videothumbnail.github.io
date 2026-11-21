@@ -1,0 +1,81 @@
+---
+import {
+  getCanonicalUrl,
+  getLocalizedPath,
+  translations,
+  type LocaleCode,
+} from '../i18n/translations';
+
+interface Props {
+  locale: LocaleCode;
+  currentPage: 'how-to-use/' | 'hire-me/';
+  currentLabel: string;
+}
+
+const { locale, currentPage, currentLabel } = Astro.props;
+const t = translations[locale];
+
+const homeHref = getLocalizedPath(locale, '');
+const homeCanonical = getCanonicalUrl(locale, '');
+const currentCanonical = getCanonicalUrl(locale, currentPage);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: t.nav.home,
+      item: homeCanonical,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: currentLabel,
+      item: currentCanonical,
+    },
+  ],
+};
+---
+
+<nav
+  aria-label="Breadcrumb"
+  class="mx-auto max-w-5xl px-4 pt-6 sm:px-6 lg:px-8"
+>
+  <ol class="inline-flex items-center gap-2 rounded-xl border border-line bg-surface-subtle/80 px-4 py-2 text-sm font-semibold text-content-secondary">
+    <li>
+      <a
+        href={homeHref}
+        class="inline-flex items-center gap-1.5 text-content-primary underline-offset-4 hover:underline"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>{t.nav.home}</span>
+      </a>
+    </li>
+    <li aria-hidden="true" class="text-content-secondary select-none">/</li>
+    <li aria-current="page" class="font-bold text-content-primary">
+      {currentLabel}
+    </li>
+  </ol>
+</nav>
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(breadcrumbSchema)}
+/>

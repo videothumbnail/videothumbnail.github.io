@@ -1,0 +1,19 @@
+---
+import HireMePage from '../../components/pages/HireMePage.astro';
+import { NON_DEFAULT_LOCALES, type LocaleCode } from '../../i18n/translations';
+
+export function getStaticPaths() {
+  return NON_DEFAULT_LOCALES.map((lang) => ({
+    params: { lang },
+    props: { locale: lang },
+  }));
+}
+
+interface Props {
+  locale: LocaleCode;
+}
+
+const { locale } = Astro.props;
+---
+
+<HireMePage locale={locale} />

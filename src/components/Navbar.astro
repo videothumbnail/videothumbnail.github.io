@@ -1,0 +1,465 @@
+---
+import {
+  SUPPORTED_LANGUAGES,
+  getLocalizedPath,
+  translations,
+  type LocaleCode,
+} from '../i18n/translations';
+
+interface Props {
+  locale: LocaleCode;
+  currentPage: '' | 'how-to-use/' | 'hire-me/';
+}
+
+const { locale, currentPage } = Astro.props;
+const t = translations[locale];
+
+const homeHref = getLocalizedPath(locale, '');
+const howToUseHref = getLocalizedPath(locale, 'how-to-use/');
+const hireMeHref = getLocalizedPath(locale, 'hire-me/');
+---
+
+<header class="sticky top-0 z-50 w-full border-b border-line bg-surface-page/90 backdrop-blur-md transition-colors duration-200">
+  <nav
+    aria-label="Primary Navigation"
+    class="mx-auto flex h-14 sm:h-16 max-w-6xl items-center justify-between px-3 sm:px-6 lg:px-8"
+  >
+    <!-- Brand Logo (Icon-only on mobile, Icon + Text on sm and up) -->
+    <a
+      href={homeHref}
+      aria-label={`${t.nav.brandName} - ${t.nav.home}`}
+      class="group inline-flex shrink-0 items-center gap-2.5 rounded-xl py-1 text-content-primary spring-transition"
+    >
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-sage text-brand-ink shadow-sm border border-brand-moss/30 spring-transition group-hover:scale-105">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="21"
+          height="21"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="3" width="20" height="18" rx="3"></rect>
+          <path d="M7 3v18"></path>
+          <path d="M17 3v18"></path>
+          <path d="M2 9h5"></path>
+          <path d="M2 15h5"></path>
+          <path d="M17 9h5"></path>
+          <path d="M17 15h5"></path>
+          <polygon points="10 9 15 12 10 15 10 9" fill="currentColor"></polygon>
+        </svg>
+      </span>
+      <span class="hidden sm:inline-block text-lg sm:text-xl font-extrabold tracking-tight text-content-primary">
+        Video<span class="text-brand-moss dark:text-brand-sage">Thumbnail</span>
+      </span>
+    </a>
+
+    <!-- Minimal Icon-Only Action Bar: Language, Dark/Light Theme, Support, GitHub + Menu Toggle Icon -->
+    <div class="relative flex items-center gap-1.5 sm:gap-2">
+      <!-- 1. Language Icon Button (8 languages) -->
+      <div
+        class="relative inline-flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-surface-card text-content-primary spring-transition hover:border-brand-moss hover:bg-surface-subtle"
+        title={t.nav.languageLabel}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="19"
+          height="19"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="pointer-events-none"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+        <span class="pointer-events-none absolute -bottom-1 -right-0.5 rounded bg-brand-sage px-1 text-[8px] font-extrabold uppercase leading-tight text-brand-ink border border-brand-ink/20">
+          {locale}
+        </span>
+        <label for="nav-lang-select" class="sr-only">{t.nav.languageLabel}</label>
+        <select
+          id="nav-lang-select"
+          aria-label={t.nav.languageLabel}
+          class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          data-lang-switcher
+        >
+          {
+            SUPPORTED_LANGUAGES.map((lang) => (
+              <option
+                value={getLocalizedPath(lang.code, currentPage)}
+                selected={lang.code === locale}
+              >
+                {lang.label}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
+      <!-- 2. Dark / Light Theme Icon Button -->
+      <button
+        type="button"
+        data-theme-toggle
+        aria-label={t.nav.themeToggleLabel}
+        title={t.nav.themeToggleLabel}
+        class="inline-flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-surface-card text-content-primary spring-transition hover:border-brand-moss hover:bg-surface-subtle"
+      >
+        <svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
+
+      <!-- 3. Support the Developer Icon Button -->
+      <a
+        href="https://kisharadilshan.gumroad.com/coffee"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t.nav.supportDevAria}
+        title={t.nav.supportDev}
+        class="inline-flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border border-brand-moss/40 bg-brand-sage text-brand-ink shadow-sm spring-transition hover:bg-brand-olive"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
+          <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path>
+          <line x1="6" x2="6" y1="2" y2="4"></line>
+          <line x1="10" x2="10" y1="2" y2="4"></line>
+          <line x1="14" x2="14" y1="2" y2="4"></line>
+        </svg>
+      </a>
+
+      <!-- 4. GitHub Repository Link Icon Button -->
+      <a
+        href="https://github.com/videothumbnail/videothumbnail.github.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="View source code on GitHub"
+        title="View source code on GitHub"
+        class="inline-flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-surface-card text-content-primary spring-transition hover:border-brand-moss hover:bg-surface-subtle"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+          <path d="M9 18c-4.51 2-5-2-7-2"></path>
+        </svg>
+      </a>
+
+      <!-- 5. Menu Toggle Icon Button (Houses Home, How to Use, Hire Me & Add to Home Screen) -->
+      <button
+        type="button"
+        id="nav-menu-toggle"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="nav-dropdown-menu"
+        title="Menu"
+        class="inline-flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-surface-card text-content-primary spring-transition hover:border-brand-moss hover:bg-surface-subtle"
+      >
+        <svg
+          id="nav-menu-icon-open"
+          xmlns="http://www.w3.org/2000/svg"
+          width="21"
+          height="21"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="4" x2="20" y1="7" y2="7"></line>
+          <line x1="4" x2="20" y1="12" y2="12"></line>
+          <line x1="4" x2="20" y1="17" y2="17"></line>
+        </svg>
+        <svg
+          id="nav-menu-icon-close"
+          class="hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          width="21"
+          height="21"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Clean Minimal Dropdown Popover Menu -->
+      <div
+        id="nav-dropdown-menu"
+        class=" absolute right-0 top-14 z-50 hidden w-60 rounded-2xl border border-line bg-surface-card p-2 shadow-elevated"
+      >
+        <div class="flex flex-col gap-1">
+          <a
+            href={homeHref}
+            aria-current={currentPage === '' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold spring-transition',
+              currentPage === ''
+                ? 'bg-brand-sage text-brand-ink'
+                : 'text-content-primary hover:bg-surface-subtle',
+            ]}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>{t.nav.home}</span>
+          </a>
+
+          <a
+            href={howToUseHref}
+            aria-current={currentPage === 'how-to-use/' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold spring-transition',
+              currentPage === 'how-to-use/'
+                ? 'bg-brand-sage text-brand-ink'
+                : 'text-content-primary hover:bg-surface-subtle',
+            ]}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <path d="M12 17h.01"></path>
+            </svg>
+            <span>{t.nav.howToUse}</span>
+          </a>
+
+          <a
+            href={hireMeHref}
+            aria-current={currentPage === 'hire-me/' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold spring-transition',
+              currentPage === 'hire-me/'
+                ? 'bg-brand-sage text-brand-ink'
+                : 'text-content-primary hover:bg-surface-subtle',
+            ]}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            <span>{t.nav.hireMe}</span>
+          </a>
+
+          <div class="my-1 h-px bg-line" aria-hidden="true"></div>
+
+          <button
+            type="button"
+            data-pwa-install-btn
+            aria-label={t.nav.installPwaAria}
+            class="flex min-h-[44px] w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm font-bold text-content-primary spring-transition hover:bg-surface-subtle"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect>
+              <path d="M12 18h.01"></path>
+              <path d="M12 8v6"></path>
+              <path d="m9 11 3 3 3-3"></path>
+            </svg>
+            <span>{t.nav.installPwa}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- iOS Safari & Universal "Add to Home Screen" Offline PWA Guide Modal -->
+<div
+  id="pwa-guide-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="pwa-modal-title"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+>
+  <div class="w-full max-w-md rounded-2xl border border-line bg-surface-card p-6 shadow-elevated">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-sage text-brand-ink">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect>
+            <path d="M12 18h.01"></path>
+            <path d="M12 8v6"></path>
+            <path d="m9 11 3 3 3-3"></path>
+          </svg>
+        </span>
+        <h2 id="pwa-modal-title" class="text-lg font-extrabold text-content-primary">
+          {t.pwaModal.title}
+        </h2>
+      </div>
+      <button
+        type="button"
+        id="pwa-modal-close-icon"
+        aria-label={t.pwaModal.closeBtn}
+        class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-content-secondary hover:bg-surface-subtle"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <p class="mt-3 text-sm text-content-secondary">
+      {t.pwaModal.subtitle}
+    </p>
+
+    <div class="mt-4 space-y-2 rounded-xl bg-surface-subtle p-4 text-sm font-medium text-content-primary">
+      <p>{t.pwaModal.iosStep1}</p>
+      <p>{t.pwaModal.iosStep2}</p>
+      <p>{t.pwaModal.iosStep3}</p>
+    </div>
+
+    <p class="mt-3 text-xs text-content-secondary">
+      {t.pwaModal.desktopNote}
+    </p>
+
+    <div class="mt-5 flex justify-end">
+      <button
+        type="button"
+        id="pwa-modal-close-btn"
+        class="btn-sage min-h-[44px] w-full rounded-xl px-5 py-2.5 text-sm font-bold"
+      >
+        {t.pwaModal.closeBtn}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    // Menu Dropdown Toggle
+    const menuToggle = document.getElementById('nav-menu-toggle');
+    const menuDropdown = document.getElementById('nav-dropdown-menu');
+    const iconOpen = document.getElementById('nav-menu-icon-open');
+    const iconClose = document.getElementById('nav-menu-icon-close');
+
+    function closeMenu() {
+      if (!menuDropdown || !menuToggle) return;
+      menuDropdown.classList.add('hidden');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      if (iconOpen) iconOpen.classList.remove('hidden');
+      if (iconClose) iconClose.classList.add('hidden');
+    }
+
+    if (menuToggle && menuDropdown) {
+      menuToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isHidden = menuDropdown.classList.contains('hidden');
+        if (isHidden) {
+          menuDropdown.classList.remove('hidden');
+          menuToggle.setAttribute('aria-expanded', 'true');
+          if (iconOpen) iconOpen.classList.add('hidden');
+          if (iconClose) iconClose.classList.remove('hidden');
+        } else {
+          closeMenu();
+        }
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!menuDropdown.contains(e.target) && e.target !== menuToggle) {
+          closeMenu();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMenu();
+      });
+    }
+
+    // Language Switcher
+    const langSelects = document.querySelectorAll('[data-lang-switcher]');
+    langSelects.forEach(function (select) {
+      select.addEventListener('change', function (e) {
+        const targetUrl = e.target.value;
+        if (targetUrl) {
+          window.location.href = targetUrl;
+        }
+      });
+    });
+
+    // Light / Dark Theme Toggle
+    const themeBtns = document.querySelectorAll('[data-theme-toggle]');
+    themeBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const htmlEl = document.documentElement;
+        const isDark = htmlEl.classList.toggle('dark');
+        try {
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch (_) {}
+      });
+    });
+
+    // Offline PWA "Add to Home Screen" installation handler
+    let deferredPrompt = null;
+    const installBtns = document.querySelectorAll('[data-pwa-install-btn]');
+    const modal = document.getElementById('pwa-guide-modal');
+    const closeBtn = document.getElementById('pwa-modal-close-btn');
+    const closeIcon = document.getElementById('pwa-modal-close-icon');
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    function openPwaModal() {
+      closeMenu();
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closePwaModal() {
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    installBtns.forEach(function (btn) {
+      btn.addEventListener('click', async function () {
+        closeMenu();
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+        } else {
+          openPwaModal();
+        }
+      });
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closePwaModal);
+    if (closeIcon) closeIcon.addEventListener('click', closePwaModal);
+    if (modal) {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closePwaModal();
+      });
+    }
+  })();
+</script>

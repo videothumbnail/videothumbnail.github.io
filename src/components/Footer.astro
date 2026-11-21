@@ -1,0 +1,110 @@
+---
+import {
+  SUPPORTED_LANGUAGES,
+  getLocalizedPath,
+  translations,
+  type LocaleCode,
+} from '../i18n/translations';
+
+interface Props {
+  locale: LocaleCode;
+  currentPage: '' | 'how-to-use/' | 'hire-me/';
+}
+
+const { locale, currentPage } = Astro.props;
+const t = translations[locale];
+---
+
+<footer class="mt-auto border-t border-line bg-surface-subtle/60 py-10">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+      <!-- Brand & Tagline -->
+      <div>
+        <a
+          href={getLocalizedPath(locale, '')}
+          class="inline-flex items-center gap-2.5 text-lg font-extrabold text-content-primary"
+        >
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-sage text-brand-ink">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2" y="3" width="20" height="18" rx="3"></rect>
+              <polygon points="10 9 15 12 10 15 10 9" fill="currentColor"></polygon>
+            </svg>
+          </span>
+          <span>VideoThumbnail</span>
+        </a>
+        <p class="mt-2 text-sm text-content-secondary">
+          {t.footer.tagline}
+        </p>
+        <p class="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-content-secondary">
+          <span class="inline-block h-2 w-2 rounded-full bg-brand-moss"></span>
+          {t.footer.privacyBadge}
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="flex flex-wrap items-center gap-4 text-sm font-bold text-content-primary">
+        <a href={getLocalizedPath(locale, '')} class="hover:underline underline-offset-4">
+          {t.nav.home}
+        </a>
+        <a href={getLocalizedPath(locale, 'how-to-use/')} class="hover:underline underline-offset-4">
+          {t.nav.howToUse}
+        </a>
+        <a href={getLocalizedPath(locale, 'hire-me/')} class="hover:underline underline-offset-4">
+          {t.nav.hireMe}
+        </a>
+        <a
+          href="https://kisharadilshan.gumroad.com/coffee"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:underline underline-offset-4"
+        >
+          {t.nav.supportDev}
+        </a>
+        <a
+          href="https://github.com/videothumbnail/videothumbnail.github.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View source code on GitHub"
+          class="hover:underline underline-offset-4"
+        >
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- Language Links Bar for Crawlers & Users -->
+    <div class="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-6 text-xs font-semibold text-content-secondary">
+      {
+        SUPPORTED_LANGUAGES.map((lang) => (
+          <a
+            href={getLocalizedPath(lang.code, currentPage)}
+            hreflang={lang.code}
+            class:list={[
+              'rounded-lg px-2.5 py-1 spring-transition',
+              lang.code === locale
+                ? 'bg-brand-sage text-brand-ink font-bold'
+                : 'hover:bg-surface-card text-content-secondary',
+            ]}
+          >
+            {lang.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="mt-6 text-xs text-content-secondary">
+      {t.footer.copyright}
+    </div>
+  </div>
+</footer>

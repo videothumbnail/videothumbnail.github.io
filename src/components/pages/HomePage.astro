@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ThumbnailMakerIsland from '../ThumbnailMakerIsland';
+import {
+  getCanonicalUrl,
+  translations,
+  type LocaleCode,
+} from '../../i18n/translations';
+
+interface Props {
+  locale: LocaleCode;
+}
+
+const { locale } = Astro.props;
+const t = translations[locale];
+const canonicalUrl = getCanonicalUrl(locale, '');
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'VideoThumbnail - Video Thumbnail Maker',
+  url: canonicalUrl,
+  description: t.home.metaDescription,
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'Any (Web Browser)',
+  browserRequirements: 'Requires HTML5 Video and HTML5 Canvas 2D support',
+  inLanguage: locale,
+  isAccessibleForFree: true,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  featureList: [
+    'Extract high-resolution frames from MP4, MOV, and WebM videos locally',
+    'Precision -1f / +1f frame-by-frame timeline scrubbing and quick filmstrip picker',
+    '16:9 YouTube (1280x720), 9:16 Shorts/TikTok Cover (1080x1920), and 1:1 Square presets',
+    'Hardware-accelerated HTML5 Canvas 2D brightness, contrast, and saturation tuning',
+    'Draggable bold thumbnail text overlays with outline and banner presets',
+    '100% client-side browser execution with zero server uploads and no watermarks',
+  ],
+  author: {
+    '@type': 'Person',
+    name: 'Kishara Dilshan',
+    url: 'https://videothumbnail.github.io/hire-me/',
+  },
+};
+
+const faqPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: t.home.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title={t.home.title}
+  description={t.home.metaDescription}
+  locale={locale}
+  currentPage=""
+>
+  <Fragment slot="schema">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(webAppSchema)}
+    />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(faqPageSchema)}
+    />
+  </Fragment>
+
+  <!-- 1ST SECTION (Full First Viewport): Strictly Main Function Only — Other Sections Appear Only on Scroll -->
+  <section
+    aria-labelledby="hero-heading"
+    class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl flex-col justify-center px-4 py-8 sm:px-6 lg:px-8"
+  >
+    <div class="mx-auto max-w-2xl text-center">
+      <h1
+        id="hero-heading"
+        class="text-2xl font-extrabold tracking-tight text-content-primary sm:text-3xl lg:text-4xl"
+      >
+        {t.home.h1}
+      </h1>
+
+      <p class="mt-2.5 text-sm font-medium leading-relaxed text-content-secondary sm:text-base">
+        {t.home.heroSubtitle}
+      </p>
+    </div>
+
+    <!-- Interactive Client-Side Video Thumbnail Maker React Island -->
+    <div class="mt-6 sm:mt-8">
+      <ThumbnailMakerIsland client:load t={t.studio} />
+    </div>
+  </section>
+
+  <!-- BELOW-THE-FOLD (Visible Only When Scrolling): Key Features Section -->
+  <section
+    aria-labelledby="features-heading"
+    class="border-t border-line bg-surface-subtle/40 py-16"
+  >
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2
+          id="features-heading"
+          class="text-2xl font-extrabold tracking-tight text-content-primary sm:text-3xl"
+        >
+          {t.home.featuresTitle}
+        </h2>
+        <p class="mt-2.5 text-sm sm:text-base text-content-secondary">
+          {t.home.featuresSubtitle}
+        </p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {
+          t.home.features.map((feat, idx) => (
+            <div class="rounded-2xl border border-line bg-surface-card p-6 shadow-card spring-transition hover:-translate-y-0.5">
+              <div class="flex items-center gap-3">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-sage text-brand-ink font-extrabold text-xs">
+                  0{idx + 1}
+                </span>
+                <h3 class="text-base font-extrabold text-content-primary">
+                  {feat.title}
+                </h3>
+              </div>
+              <p class="mt-2.5 text-sm leading-relaxed text-content-secondary">
+                {feat.description}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- BELOW-THE-FOLD: 4 Visible Q&As (Mirrored by FAQPage JSON-LD Schema) -->
+  <section
+    aria-labelledby="faq-heading"
+    class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <div class="text-center">
+      <h2
+        id="faq-heading"
+        class="text-2xl font-extrabold tracking-tight text-content-primary sm:text-3xl"
+      >
+        {t.home.faqTitle}
+      </h2>
+      <p class="mt-2.5 text-sm sm:text-base text-content-secondary">
+        {t.home.faqSubtitle}
+      </p>
+    </div>
+
+    <div class="mt-10 space-y-4">
+      {
+        t.home.faqs.map((faq) => (
+          <article class="rounded-2xl border border-line bg-surface-card p-6 shadow-card">
+            <h3 class="text-base sm:text-lg font-extrabold text-content-primary">
+              {faq.question}
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-content-secondary">
+              {faq.answer}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
